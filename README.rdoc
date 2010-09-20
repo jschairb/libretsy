@@ -1,6 +1,6 @@
 = libretsy
 
-Description goes here.
+Pronounced like liberty.
 
 == Note on Patches/Pull Requests
  
