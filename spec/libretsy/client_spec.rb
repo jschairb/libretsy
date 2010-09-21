@@ -2,9 +2,7 @@ require 'spec_helper'
 
 describe Libretsy::Client do
   before(:each) do
-    @attributes = { :url => "http://example.com", :username => "rets-user", :password => "password",
-      :user_agent => "libretsy/0.0.0", :rets_version => "RETS/1.5"
-    }
+    @attributes = default_client_attributes
   end
 
   describe "#initialize" do

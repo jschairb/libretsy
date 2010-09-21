@@ -2,10 +2,7 @@ require 'spec_helper'
 
 describe Libretsy::LoginRequest do
   before(:each) do
-    @attributes = { :url => "http://example.com", :username => "rets-user", :password => "password",
-      :user_agent => "libretsy/0.0.0", :rets_version => "RETS/1.5"
-    }
-    @client = Libretsy::Client.new(@attributes)
+    @client = Libretsy::Client.new(default_client_attributes)
   end
 
   it "is sub-classed for request" do
@@ -13,6 +10,12 @@ describe Libretsy::LoginRequest do
   end
 
   describe "#initialize" do
+  end
+
+  describe "#self.request" do
+    it "is delegated to the Request class" do
+      Libretsy::LoginRequest.should respond_to(:request)
+    end
   end
 
   describe "#client" do
