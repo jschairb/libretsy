@@ -7,15 +7,14 @@ begin
   Jeweler::Tasks.new do |gem|
     gem.name = "libretsy"
     gem.summary = %Q{A pure ruby client for a RETS system}
-    gem.description = %Q{A pure ruby client for a RETS system}
+    gem.description = %Q{A pure ruby client for a RETS system focused on speed and maintainability.}
     gem.email = "joshua.schairbaum@gmail.com"
     gem.homepage = "http://github.com/jschairb/libretsy"
     gem.authors = ["Joshua Schairbaum"]
     gem.add_development_dependency "rspec", ">= 1.2.9"
-    gem.add_development_dependency "activesupport"
+    gem.add_runtime_dependency "typhoeus"
     gem.version = Libretsy::VERSION
     gem.files   = FileList['lib/**/*.rb', '[A-Z]*', 'spec/**/*'].to_a
-    # gem is a Gem::Specification... see http://www.rubygems.org/read/chapter/20 for additional settings
   end
   Jeweler::GemcutterTasks.new
 rescue LoadError
