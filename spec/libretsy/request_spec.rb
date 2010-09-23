@@ -51,16 +51,12 @@ describe Libretsy::Request do
     end
   end
 
-  describe "#requires_authentication?" do
-    before(:each) do
-      @response = mock("response", :code => 401)
-      @request = Libretsy::Request.new(@client)
-      @request.response = @response
-    end
-
-    it "returns true if the response code is 401" do
-      @request.response.should_not be_nil
-      @request.requires_authentication?.should == true
+  describe "#session" do
+    it "sets the session" do
+      session = Libretsy::Request.new(@client).session
+      session.should_not be_nil
+      session.should == @client.session
+      session.should be_kind_of(Libretsy::Session)
     end
   end
 end

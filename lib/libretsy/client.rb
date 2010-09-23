@@ -4,11 +4,15 @@ module Libretsy
     attr_accessor *ATTRIBUTES
 
     def initialize(config = { })
-      # NOTE: possibly, raise unless certain configs exist
       config.each { |k,v| send(:"#{k}=",v) }
     end
 
     def login
+      LoginRequest.request(self, @session)
+    end
+
+    def session
+      @session ||= Session.new(self)
     end
   end
 end

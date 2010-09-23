@@ -5,7 +5,7 @@ module Libretsy
     OPTIONAL_HEADERS = %w(Accept-Encoding Authorization Cookie RETS-Request-ID)
 
     def headers
-      required_headers.merge(optional_headers).delete_if { |k,v| v.nil? }
+      required_headers.merge(optional_headers).merge(session.authorization_headers).delete_if { |k,v| v.nil? }
     end
 
     def required_headers

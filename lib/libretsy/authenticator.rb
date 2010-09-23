@@ -23,6 +23,13 @@ module Libretsy
       header = ""
       header << "Digest username=\"#{client.username}\", "
       header << "realm=\"#{realm}\", "
+      header << "qop=\"#{qop}\", "
+      header << "uri=\"#{request.uri}\", "
+      header << "nonce=\"#{nonce}\", "
+      header << "nc=\"#{ ('%08x' % nc) }\", "
+      header << "cnonce=\"#{cnonce}\", "
+      header << "response=\"#{calculate_digest}\", "
+      header << "opaque=\"#{opaque}\""
 
       { "WWW-Authenticate" => header }
     end
