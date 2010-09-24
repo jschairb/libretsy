@@ -31,7 +31,7 @@ describe Libretsy::Request do
 
   describe "#do_request" do
     before(:each) do
-      @response = mock("response", :code => 200)
+      @response = mock("response", :code => 200, :request => { })
     end
 
     it "makes a Typhoeus request" do

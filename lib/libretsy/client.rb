@@ -7,10 +7,6 @@ module Libretsy
       config.each { |k,v| send(:"#{k}=",v) }
     end
 
-    def login
-      LoginRequest.request(self, @session)
-    end
-
     def session
       @session ||= Session.new(self)
     end

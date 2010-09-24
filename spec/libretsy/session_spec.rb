@@ -25,7 +25,24 @@ describe Libretsy::Session do
     end
 
     it "makes a LoginRequest" do
+    end
 
+    describe "without a nonce from the server" do
+      it "makes 2 request" do
+
+      end
+    end
+
+    describe "with a nonce from the server" do
+    end
+
+  end
+
+  describe "#requires_authentication?" do
+    it "returns true if the response code is 401" do
+      session = Libretsy::Session.new(@client)
+      session.response = mock("response", :code => 401)
+      session.requires_authentication?.should == true
     end
   end
 

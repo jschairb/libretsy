@@ -8,15 +8,12 @@ module Libretsy
     def initialize(client, response)
       @client = client
       @response = response
-      parse_response_headers(response)
+      parse_response_headers(@response)
     end
 
     def self.authenticate(client,response)
-      new(client,response).authentication_headers
-    end
-
-    def authentication_headers
-      "HERE"
+      authenticator = new(client,response)
+      return authenticator.authorization_header
     end
 
     def authorization_header
@@ -24,33 +21,41 @@ module Libretsy
       header << "Digest username=\"#{client.username}\", "
       header << "realm=\"#{realm}\", "
       header << "qop=\"#{qop}\", "
-      header << "uri=\"#{request.uri}\", "
+      header << "uri=\"#{request_uri}\", "
       header << "nonce=\"#{nonce}\", "
-      header << "nc=\"#{ ('%08x' % nc) }\", "
+      header << "nc=\"#{nc_value}\", "
       header << "cnonce=\"#{cnonce}\", "
       header << "response=\"#{calculate_digest}\", "
       header << "opaque=\"#{opaque}\""
 
-      { "WWW-Authenticate" => header }
+      { "Authorization" => header }
     end
 
     def cnonce
-      Digest::MD5.hexdigest("#{client.username}:#{client.password}:#{request_id}:#{nonce}")
+      Digest::MD5.hexdigest("#{client.username}:#{client.password}:#{nonce}")
     end
 
-    def request_id
-      Digest::MD5.hexdigest(Time.now.to_f.to_s)
+    def nc_value
+      '%08x' % client.session.nonce_count
+    end
+
+    def request_method
+      response.request.method.to_s.upcase
+    end
+
+    def request_uri
+      response.request.uri.gsub(response.request.host, "")
     end
 
     protected
     def calculate_digest
       ha1 = Digest::MD5.hexdigest("#{client.username}:#{realm}:#{client.password}")
-      ha2 = Digest::MD5.hexdigest("#{request.method}:#{request.uri}")
+      ha2 = Digest::MD5.hexdigest("#{request_method}:#{request_uri}")
       qop ? digest_with_cnonce(ha1,ha2) : digest_without_cnonce(ha1,ha2)
     end
 
     def digest_with_cnonce(ha1,ha2)
-      digest = "#{ha1}:#{nonce}:#{('%08x' % nc)}:#{cnonce}:#{qop}:#{ha2}"
+      digest = "#{ha1}:#{nonce}:#{nc_value}:#{cnonce}:#{qop}:#{ha2}"
       Digest::MD5.hexdigest(digest)
     end
 

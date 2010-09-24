@@ -4,7 +4,9 @@ describe Libretsy::Authenticator do
   before(:each) do
     @client = Libretsy::Client.new(default_client_attributes)
     @response = mock("response",
-       :headers_hash => { "WWW-Authenticate" => "Digest realm=\"DTON\", nonce=\"e1fa8b7c8ab2f049f5db095f814d352a\", opaque=\"20d1ccc139e99b834857cae3bae672ca\", qop=\"auth\"" }
+       :headers_hash => { "WWW-Authenticate" => "Digest realm=\"DTON\", nonce=\"e1fa8b7c8ab2f049f5db095f814d352a\", opaque=\"20d1ccc139e99b834857cae3bae672ca\", qop=\"auth\"" },
+       :request      => mock("request", :uri => "http://www.example.com/rets/login.aspx", :host => "http://www.example.com",
+                             :method => :post)
     )
   end
 
@@ -25,16 +27,9 @@ describe Libretsy::Authenticator do
   end
 
   describe "#self.authenticate" do
-    it "creates a new Authenticator" do
+    it "returns the authorization header" do
       @authenticator = Libretsy::Authenticator.new(@client,@response)
-      Libretsy::Authenticator.should_receive(:new).with(@client,@response).and_return(@authenticator)
-      Libretsy::Authenticator.authenticate(@client,@response)
-    end
-
-    it "returns the authentication headers" do
-      @authenticator = Libretsy::Authenticator.new(@client,@response)
-      Libretsy::Authenticator.stub!(:new).and_return(@authenticator)
-      Libretsy::Authenticator.authenticate(@client,@response).should == @authenticator.authentication_headers
+      Libretsy::Authenticator.authenticate(@client,@response).should == @authenticator.authorization_header
     end
   end
 
