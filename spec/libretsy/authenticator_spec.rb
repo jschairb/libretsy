@@ -5,7 +5,7 @@ describe Libretsy::Authenticator do
     @client = Libretsy::Client.new(default_client_attributes)
     @response = mock("response",
        :headers_hash => { "WWW-Authenticate" => "Digest realm=\"DTON\", nonce=\"e1fa8b7c8ab2f049f5db095f814d352a\", opaque=\"20d1ccc139e99b834857cae3bae672ca\", qop=\"auth\"" },
-       :request      => mock("request", :uri => "http://www.example.com/rets/login.aspx", :host => "http://www.example.com",
+       :request      => mock("request", :url => "http://www.example.com/rets/login.aspx", :host => "http://www.example.com",
                              :method => :post)
     )
   end

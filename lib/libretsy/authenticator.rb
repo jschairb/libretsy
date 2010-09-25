@@ -44,7 +44,7 @@ module Libretsy
     end
 
     def request_uri
-      response.request.uri.gsub(response.request.host, "")
+      response.request.url.gsub(response.request.host, "")
     end
 
     protected
