@@ -25,7 +25,7 @@ module Libretsy
       header << "nonce=\"#{nonce}\", "
       header << "nc=\"#{nc_value}\", "
       header << "cnonce=\"#{cnonce}\", "
-      header << "response=\"#{calculate_digest}\", "
+      header << "response=\"#{response_digest}\", "
       header << "opaque=\"#{opaque}\""
 
       { "Authorization" => header }
@@ -33,6 +33,14 @@ module Libretsy
 
     def cnonce
       Digest::MD5.hexdigest("#{client.username}:#{client.password}:#{nonce}")
+    end
+
+    def ha_1
+      Digest::MD5.hexdigest("#{client.username}:#{realm}:#{client.password}")
+    end
+
+    def ha_2
+      Digest::MD5.hexdigest("#{request_method}:#{request_uri}")
     end
 
     def nc_value
@@ -47,20 +55,18 @@ module Libretsy
       response.request.url.gsub(response.request.host, "")
     end
 
-    protected
-    def calculate_digest
-      ha1 = Digest::MD5.hexdigest("#{client.username}:#{realm}:#{client.password}")
-      ha2 = Digest::MD5.hexdigest("#{request_method}:#{request_uri}")
-      qop ? digest_with_cnonce(ha1,ha2) : digest_without_cnonce(ha1,ha2)
+    def response_digest
+      qop ? digest_with_cnonce : digest_without_cnonce
     end
 
-    def digest_with_cnonce(ha1,ha2)
-      digest = "#{ha1}:#{nonce}:#{nc_value}:#{cnonce}:#{qop}:#{ha2}"
+    protected
+    def digest_with_cnonce
+      digest = "#{ha_1}:#{nonce}:#{nc_value}:#{cnonce}:#{qop}:#{ha_2}"
       Digest::MD5.hexdigest(digest)
     end
 
-    def digest_without_cnonce(ha1, ha2)
-      digest = "#{ha1}:#{nonce}:#{ha2}"
+    def digest_without_cnonce
+      digest = "#{ha_1}:#{nonce}:#{ha_2}"
       Digest::MD5.hexdigest(digest)
     end
 
