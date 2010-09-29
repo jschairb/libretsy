@@ -14,8 +14,14 @@ module Libretsy
       if requires_authentication?
         set_authorization_headers
         @response = Libretsy::LoginRequest.request(client)
+        increment_nonce_count
         parse_authentication_login_response
       end
+    end
+
+    def logout
+      @response = Libretsy::LogoutRequest.request(client)
+      reset_nonce_count
     end
 
     def requires_authentication?
@@ -23,9 +29,17 @@ module Libretsy
     end
 
     protected
+    def increment_nonce_count
+      @nonce_count += 1
+    end
+
     def parse_authentication_login_response
       self.cookie = @response.headers_hash["Set-Cookie"]
       set_urls
+    end
+
+    def reset_nonce_count
+      @nonce_count = 0
     end
 
     def select_value(key)

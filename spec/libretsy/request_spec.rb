@@ -51,6 +51,13 @@ describe Libretsy::Request do
     end
   end
 
+  describe "#path" do
+    it "returns the clients default_path" do
+      request = Libretsy::Request.new(@client)
+      request.path.should == @client.default_path
+    end
+  end
+
   describe "#session" do
     it "sets the session" do
       session = Libretsy::Request.new(@client).session

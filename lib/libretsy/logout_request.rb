@@ -1,5 +1,5 @@
 module Libretsy
-  class LoginRequest < Request
+  class LogoutRequest < Request
 
     REQUIRED_HEADERS = %w(Accept RETS-Version User-Agent)
     OPTIONAL_HEADERS = %w(Accept-Encoding Authorization Cookie RETS-Request-ID)
@@ -18,7 +18,7 @@ module Libretsy
     end
 
     def path
-      client.default_path
+      client.session.urls[:logout]
     end
 
   end

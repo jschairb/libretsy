@@ -65,6 +65,13 @@ describe Libretsy::LoginRequest do
     end
   end
 
+  describe "#path" do
+    it "returns the clients default_path" do
+      request = Libretsy::LoginRequest.new(@client)
+      request.path.should == @client.default_path
+    end
+  end
+
   describe "#required_headers" do
     before(:each) do
       @login_request = Libretsy::LoginRequest.new(@client)

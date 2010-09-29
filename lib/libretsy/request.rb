@@ -15,14 +15,23 @@ module Libretsy
     end
 
     def do_request
-      @response = Typhoeus::Request.post(client.url, :headers => headers,
-                                        :password => client.password,
-                                        :username => client.username,
-                                        :user_agent => client.user_agent )
+      @response = Typhoeus::Request.post(url,
+                                         :headers => headers,
+                                         :password => client.password,
+                                         :username => client.username,
+                                         :user_agent => client.user_agent )
     end
 
     def headers
       { }
+    end
+
+    def path
+      client.default_path
+    end
+
+    def url
+      client.host + path
     end
   end
 end
